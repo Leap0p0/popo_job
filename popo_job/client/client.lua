@@ -39,31 +39,31 @@ local builder = {
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 
-RMenu.Add("popogang", "categorie", RageUI.CreateMenu("Souhaitez-vous", "~b~ Créer / Supprimer"))
-RMenu:Get("popogang", "categorie").Closed = function()
+RMenu.Add("popojob", "categorie", RageUI.CreateMenu("Souhaitez-vous", "~b~ Créer / Supprimer"))
+RMenu:Get("popojob", "categorie").Closed = function()
 end
 
-RMenu.Add("popogang", "garage", RageUI.CreateMenu("Souhaitez-vous", nil))
-RMenu:Get("popogang", "garage").Closed = function()
+RMenu.Add("popojob", "garage", RageUI.CreateMenu("Souhaitez-vous", nil))
+RMenu:Get("popojob", "garage").Closed = function()
 end
 
-RMenu.Add("popogang", "stock", RageUI.CreateMenu("Souhaitez-vous", "~b~ Prendre / Déposer"))
-RMenu:Get("popogang", "stock").Closed = function()
+RMenu.Add("popojob", "stock", RageUI.CreateMenu("Souhaitez-vous", "~b~ Prendre / Déposer"))
+RMenu:Get("popojob", "stock").Closed = function()
 end
-RMenu.Add("popogang", "boss", RageUI.CreateMenu("Souhaitez-vous", "Souhaitez-vous : "))
-RMenu:Get("popogang", "boss").Closed = function()
-end
-
-RMenu.Add("popogang", "create", RageUI.CreateSubMenu(RMenu:Get("popogang", "categorie"), "lolo", nil))
-RMenu:Get("popogang", "create").Closed = function()
+RMenu.Add("popojob", "boss", RageUI.CreateMenu("Souhaitez-vous", "Souhaitez-vous : "))
+RMenu:Get("popojob", "boss").Closed = function()
 end
 
-RMenu.Add("popogang", "grade", RageUI.CreateSubMenu(RMenu:Get("popogang", "create"), "test", nil))
-RMenu:Get("popogang", "grade").Closed = function()
+RMenu.Add("popojob", "create", RageUI.CreateSubMenu(RMenu:Get("popojob", "categorie"), "lolo", nil))
+RMenu:Get("popojob", "create").Closed = function()
 end
 
-RMenu.Add("popogang", "delete", RageUI.CreateSubMenu(RMenu:Get("popogang", "categorie"), "eded", nil))
-RMenu:Get("popogang", "delete").Closed = function()
+RMenu.Add("popojob", "grade", RageUI.CreateSubMenu(RMenu:Get("popojob", "create"), "test", nil))
+RMenu:Get("popojob", "grade").Closed = function()
+end
+
+RMenu.Add("popojob", "delete", RageUI.CreateSubMenu(RMenu:Get("popojob", "categorie"), "eded", nil))
+RMenu:Get("popojob", "delete").Closed = function()
 end
 
 RegisterNetEvent('esx:playerLoaded')
@@ -77,9 +77,9 @@ AddEventHandler('esx:setJob', function(job)
 ESX.PlayerData.job = job
 end)
 
-RegisterNetEvent('esx:setJob2')
-AddEventHandler('esx:setJob2', function(job2)
-ESX.PlayerData.job2 = job2
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job2)
+ESX.PlayerData.job = job
 end)
 
 local function KeyboardInput(entryTitle, textEntry, inputText, maxLength)
@@ -105,7 +105,7 @@ end
 
 local function OpenGetStocksMenu(society_name)
 
-ESX.TriggerServerCallback('popogang:getStockItems', function(items, society_name)
+ESX.TriggerServerCallback('popojob:getStockItems', function(items, society_name)
 
   print(json.encode(items))
 
@@ -138,7 +138,7 @@ ESX.TriggerServerCallback('popogang:getStockItems', function(items, society_name
             menu.close()
             OpenGetStocksMenu(society_name)
 
-            TriggerServerEvent('popogang:getStockItems', itemName, count, society_name)
+            TriggerServerEvent('popojob:getStockItems', itemName, count, society_name)
           end
         end, function(data2, menu2)
           menu2.close()
@@ -151,7 +151,7 @@ end
 
 local function OpenPutStocksMenu(society_name)
 
-ESX.TriggerServerCallback('popogang:getPlayerInventory', function(inventory)
+ESX.TriggerServerCallback('popojob:getPlayerInventory', function(inventory)
 
   local elements = {}
 
@@ -184,7 +184,7 @@ ESX.TriggerServerCallback('popogang:getPlayerInventory', function(inventory)
             menu.close()
             OpenPutStocksMenu(society_name)
 
-            TriggerServerEvent('popogang:putStockItems', itemName, count)
+            TriggerServerEvent('popojob:putStockItems', itemName, count)
           end
         end, function(data2, menu2)
           menu2.close()
@@ -198,10 +198,10 @@ end
 --STOCK MENU RageUI--
 
 local function openStockMenu(society_name)
-RageUI.Visible(RMenu:Get("popogang","stock"), true)
+RageUI.Visible(RMenu:Get("popojob","stock"), true)
 Citizen.CreateThread(function()
   while true do
-    RageUI.IsVisible(RMenu:Get("popogang","stock"),true,true,true,function()
+    RageUI.IsVisible(RMenu:Get("popojob","stock"),true,true,true,function()
       RageUI.Button(_U('get_stock'), _U('get_stock'), {RightLabel = "~g~>>>"}, true,function(h,a,s)
                   if (s) then
           RageUI.CloseAll()
@@ -222,10 +222,10 @@ end
 
 --open the boss menu in RageUI--
 local function boss()
-  RageUI.Visible(RMenu:Get("popogang","boss"), true)
+  RageUI.Visible(RMenu:Get("popojob","boss"), true)
   Citizen.CreateThread(function()
   while true do
-      RageUI.IsVisible(RMenu:Get("popogang","boss"),true,true,true,function()
+      RageUI.IsVisible(RMenu:Get("popojob","boss"),true,true,true,function()
           RageUI.Button("Retirer argent de société" , "Retirer argent de société", {RightLabel = "~g~>>>"}, true,function(h,a,s)
               if (s) then
                   RageUI.CloseAll()
@@ -234,7 +234,7 @@ local function boss()
                   if amount == nil then
                       ESX.ShowNotification('Montant invalide')
                   else
-                      TriggerServerEvent('esx_society:withdrawMoney', tostring(ESX.PlayerData.job2.name), amount)
+                      TriggerServerEvent('esx_society:withdrawMoney', tostring(ESX.PlayerData.job.name), amount)
                   end
               end
           end)
@@ -246,7 +246,7 @@ local function boss()
                   if amount == nil then
                       ESX.ShowNotification('Montant invalide')
                   else
-                      TriggerServerEvent('esx_society:depositMoney', tostring(ESX.PlayerData.job2.name), amount)
+                      TriggerServerEvent('esx_society:depositMoney', tostring(ESX.PlayerData.job.name), amount)
                   end
               end
           end)
@@ -261,11 +261,13 @@ local function show_marker()
   while true do
       local interval = 500
       local pos = GetEntityCoords(PlayerPedId())
-      local job = ESX.PlayerData.job2.name
-      local job_grade = ESX.PlayerData.job2.grade_name
+      local job = ESX.PlayerData.job.name
+      local job_grade = ESX.PlayerData.job.grade_name
       for i, teleportpoints in pairs(gangpoint) do
           local a = teleportpoints.first_coord
           local b = teleportpoints.second_coord
+          print(job)
+          print(teleportpoints.gang_name)
           
           --POINT COFFRE--
           local dist = #(pos - a)
@@ -304,23 +306,23 @@ end
 --open the menu in RageUI--
 local function openMenu()
 
-  RageUI.Visible(RMenu:Get("popogang","categorie"), true)
+  RageUI.Visible(RMenu:Get("popojob","categorie"), true)
   Citizen.CreateThread(function()
       while true do
           --Create / Delete--
-          RageUI.IsVisible(RMenu:Get("popogang","categorie"),true,true,true,function()
+          RageUI.IsVisible(RMenu:Get("popojob","categorie"),true,true,true,function()
               RageUI.Button("Créer" , "Créer", {RightLabel = "~g~>>>"}, true,function(h,a,s)
                   if (s) then
                   end
-              end, RMenu:Get("popogang", "create"))
+              end, RMenu:Get("popojob", "create"))
               RageUI.Button(_U('delete') , _U('delete'), {RightLabel = "~g~>>>"}, true,function(h,a,s)
                   if (s) then
                   end
-              end, RMenu:Get("popogang", "delete"))
+              end, RMenu:Get("popojob", "delete"))
           end, function()end)
 
           --Create Menu--
-          RageUI.IsVisible(RMenu:Get("popogang","create"),true,true,true,function()
+          RageUI.IsVisible(RMenu:Get("popojob","create"),true,true,true,function()
               RageUI.Button(_U('name') , _U('name'), {RightLabel = builder.gang_name}, true,function(h,a,s)
                   if (s) then
                       name = KeyboardInput("POPO_BOX_NAME", _U('name'), "", 15)
@@ -342,7 +344,7 @@ local function openMenu()
               RageUI.Button(_U('grade') , _U('grade'), {RightLabel = "~g~>>>"}, true,function(h,a,s)
                   if (s) then
                   end
-              end, RMenu:Get("popogang", "grade"))
+              end, RMenu:Get("popojob", "grade"))
         if builder.first_coord == nil then 
           first_place = "~r~❌"
         else 
@@ -373,9 +375,9 @@ local function openMenu()
                   if (s) then
                     if second_place == "~b~✅" and first_place == "~b~✅" and builder.gang_name and builder.label_name then
                       RageUI.CloseAll()
-                          TriggerServerEvent('popo_gang:register_gang', builder)
-                          TriggerServerEvent('popo_gang:register_Inventory_account', builder)
-                          TriggerServerEvent('popo_gang:register_job_grades', builder)
+                          TriggerServerEvent('popo_job:register_job', builder)
+                          TriggerServerEvent('popo_job:register_Inventory_account', builder)
+                          TriggerServerEvent('popo_job:register_job_grades', builder)
                           ESX.ShowNotification(_U('good_create')..builder.gang_name.._U('good_create_bis'))
                           second_place = "~r~❌"
                           first_place = "~r~❌"
@@ -395,7 +397,7 @@ local function openMenu()
 
            --Delete Menu--
 
-          RageUI.IsVisible(RMenu:Get("popogang","delete"),true,true,true,function()
+          RageUI.IsVisible(RMenu:Get("popojob","delete"),true,true,true,function()
               RageUI.Button(_U('name') , _U('name'), {RightLabel = name_suppr}, true,function(h,a,s)
                   if (s) then
                       name_suppr = KeyboardInput("POPO_BOX_BIS", _U('name'), "", 15)
@@ -407,7 +409,7 @@ local function openMenu()
                   if (s) then
                       if name_suppr and name_suppr ~= "" then
                           RageUI.CloseAll()
-                          TriggerServerEvent('popo_gang:delete_gang', name_suppr)
+                          TriggerServerEvent('popo_job:delete_job', name_suppr)
                           ESX.ShowNotification(_U('good_delete')..name_suppr.._U('good_delete_bis'))
                           name_suppr = nil
                       else
@@ -417,7 +419,7 @@ local function openMenu()
               end)
           end, function()end, 1)
           --Grade Menu--
-          RageUI.IsVisible(RMenu:Get("popogang","grade"),true,true,true,function()
+          RageUI.IsVisible(RMenu:Get("popojob","grade"),true,true,true,function()
               RageUI.Button(_U('petit') , _U('petit'), {RightLabel = builder.name_petit}, true,function(h,a,s)
                   if (s) then
                       builder.name_petit = KeyboardInput("POPO_BOX_first", _U('petit'), "", 15)
@@ -460,414 +462,21 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 PlayerData = xPlayer   
 end)
 
-RegisterNetEvent('esx:setjob2')
-AddEventHandler('esx:setjob2', function(job2)
-PlayerData.job2 = job2
+RegisterNetEvent('esx:setjob')
+AddEventHandler('esx:setjob', function(job2)
+PlayerData.job = job
 end)
 
-
-function OpenBanditsMenu()
-
-ESX.UI.Menu.CloseAll()
-
-ESX.UI.Menu.Open(
-  'default', GetCurrentResourceName(), 'bandits_actions',
-  {
-    title    = 'Menu Illégal',
-    align    = 'right',
-    elements = {
-      {label = 'Intéraction Civil',    value = 'citizen_interaction'},
-      {label = 'Intéraction Véhicule',    value = 'vehicle_interaction'},
-    },
-  },
-
-
-  function(data, menu)
-
-    if data.current.value == 'citizen_interaction' then
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'citizen_interaction',
-        {
-          title    = 'Intéraction Victime',
-          align    = 'right',
-          elements = {
-            {label = 'Faire les poches',               value = 'body_search'},
-            {label = 'Ligotter/Enlever',               value = 'handcuff'},
-            {label = 'Kidnapper',                      value = 'drag'},
-            {label = 'Mettre de force dans Véhicule',  value = 'put_in_vehicle'},
-            {label = 'Ejecter de la voiture',          value = 'out_the_vehicle'},
-          },
-        },
-           
-        function(data2, menu2)
-               
-          local player, distance = ESX.Game.GetClosestPlayer()
-
-          if distance ~= -1 and distance <= 3.0 then
-
-            if data2.current.value == 'body_search' then
-              OpenBodySearchMenu(player)
-            end
-
-            if data2.current.value == 'handcuff' then
-              TriggerServerEvent('popogang:handcuff', GetPlayerServerId(player))
-            end
-
-            if data2.current.value == 'drag' then
-              TriggerServerEvent('popogang:drag', GetPlayerServerId(player))
-            end
-
-            if data2.current.value == 'put_in_vehicle' then
-              TriggerServerEvent('popogang:putInVehicle', GetPlayerServerId(player))
-            end
-
-            if data2.current.value == 'out_the_vehicle' then
-              TriggerServerEvent('popogang:OutVehicle', GetPlayerServerId(player))
-            end
-
-          else
-            ESX.ShowNotification(_U('no_players_nearby'))
-          end    
-
-        end,
-        function(data2, menu2)
-          menu2.close()
-        end
-      )
-
-    end
-
-    if data.current.value == 'vehicle_interaction' then
-
-      ESX.UI.Menu.Open(
-        'default', GetCurrentResourceName(), 'vehicle_interaction',
-        {
-          title    = 'Intéraction Véhicule',
-          align    = 'right',
-          elements = {
-            {label = 'Info Véhicule',          value = 'vehicle_infos'},
-            {label = 'Forcer la fermeture',    value = 'hijack_vehicle'},
-          },
-        },
-        function(data2, menu2)
-
-          local playerPed = GetPlayerPed(-1)
-          local coords    = GetEntityCoords(playerPed)
-          local vehicle   = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
-
-          if DoesEntityExist(vehicle) then
-
-            local vehicleData = ESX.Game.GetVehicleProperties(vehicle)
-
-            if data2.current.value == 'vehicle_infos' then
-              OpenVehicleInfosMenu(vehicleData)
-            end
-
-            if data2.current.value == 'hijack_vehicle' then
-
-              local playerPed = GetPlayerPed(-1)
-              local coords    = GetEntityCoords(playerPed)
-
-              if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 3.0) then
-
-                local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
-
-                if DoesEntityExist(vehicle) then
-
-                  Citizen.CreateThread(function()
-
-                    TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_WELDING", 0, true)
-
-                    Wait(20000)
-
-                    ClearPedTasksImmediately(playerPed)
-
-                    SetVehicleDoorsLocked(vehicle, 1)
-                    SetVehicleDoorsLockedForAllPlayers(vehicle, false)
-
-                    TriggerEvent('esx:showNotification', 'vehicle_unlocked')
-
-                  end)
-
-                end
-
-              end
-
-            end
-
-          else
-            ESX.ShowNotification(_U('no_vehicles_nearby'))
-          end
-
-        end,
-        function(data2, menu2)
-          menu2.close()
-        end
-      )
-
-    end
-
-  end,
-  function(data, menu)
-
-    menu.close()
-
-  end
-)
-
-end
-
-function OpenBodySearchMenu(player)
-
-ESX.TriggerServerCallback('popogang:getOtherPlayerData', function(data)
-
-  local elements = {}
-
-  local blackMoney = 0
-
-  for i=1, #data.accounts, 1 do
-    if data.accounts[i].name == 'black_money' then
-      blackMoney = data.accounts[i].money
-    end
-  end
-
-  table.insert(elements, {
-    label          = 'confisquer argent sale : $' .. blackMoney,
-    value          = 'black_money',
-    itemType       = 'item_account',
-    amount         = blackMoney
-  })
-
-  table.insert(elements, {label = '--- Armes ---', value = nil})
-
-  for i=1, #data.weapons, 1 do
-    table.insert(elements, {
-      label          = 'confisquer ' .. ESX.GetWeaponLabel(data.weapons[i].name),
-      value          = data.weapons[i].name,
-      itemType       = 'item_weapon',
-      amount         = data.ammo,
-    })
-  end
-
-  table.insert(elements, {label = '--- Inventaire ---', value = nil})
-
-  for i=1, #data.inventory, 1 do
-    if data.inventory[i].count > 0 then
-      table.insert(elements, {
-        label          = 'confisquer x' .. data.inventory[i].count .. ' ' .. data.inventory[i].label,
-        value          = data.inventory[i].name,
-        itemType       = 'item_standard',
-        amount         = data.inventory[i].count,
-      })
-    end
-  end
-
-
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'body_search',
-    {
-      title    = 'Faire les poches',
-      align    = 'right',
-      elements = elements,
-    },
-    function(data, menu)
-
-      local itemType = data.current.itemType
-      local itemName = data.current.value
-      local amount   = data.current.amount
-
-      if data.current.value ~= nil then
-
-        TriggerServerEvent('popogang:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, amount)
-
-        OpenBodySearchMenu(player)
-
-      end
-
-    end,
-    function(data, menu)
-      menu.close()
-    end
-  )
-
-end, GetPlayerServerId(player))
-
-end
-
-function OpenVehicleInfosMenu(vehicleData)
-
-ESX.TriggerServerCallback('popogang:getVehicleInfos', function(infos)
-
-  local elements = {}
-
-  table.insert(elements, {label = 'Plaque' .. infos.plate, value = nil})
-
-  if infos.owner == nil then
-    table.insert(elements, {label = 'Propriétaire Inconnu', value = nil})
-  else
-    table.insert(elements, {label = 'Propriétaire' .. infos.owner, value = nil})
-  end
-
-  ESX.UI.Menu.Open(
-    'default', GetCurrentResourceName(), 'vehicle_infos',
-    {
-      title    = 'Info Véhicule',
-      align    = 'right',
-      elements = elements,
-    },
-    nil,
-    function(data, menu)
-      menu.close()
-    end
-  )
-
-end, vehicleData.plate)
-
-end
-
-RegisterNetEvent('popogang:handcuff')
-AddEventHandler('popogang:handcuff', function()
-
-IsHandcuffed    = not IsHandcuffed;
-local playerPed = GetPlayerPed(-1)
-
-Citizen.CreateThread(function()
-
-  if IsHandcuffed then
-
-    RequestAnimDict('mp_arresting')
-
-    while not HasAnimDictLoaded('mp_arresting') do
-      Wait(100)
-    end
-
-    TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
-    SetEnableHandcuffs(playerPed, true)
-    SetPedCanPlayGestureAnims(playerPed, false)
-    FreezeEntityPosition(playerPed,  true)
-
-  else
-
-    ClearPedSecondaryTask(playerPed)
-    SetEnableHandcuffs(playerPed, false)
-    SetPedCanPlayGestureAnims(playerPed,  true)
-    FreezeEntityPosition(playerPed, false)
-
-  end
-
-end)
-end)
-
-
-RegisterNetEvent('popogang:drag')
-AddEventHandler('popogang:drag', function(cop)
-IsDragged = not IsDragged
-CopPed = tonumber(cop)
-end)
-
-
-Citizen.CreateThread(function()
-while true do
-  Wait(0)
-  if IsHandcuffed then
-    if IsDragged then
-      local ped = GetPlayerPed(GetPlayerFromServerId(CopPed))
-      local myped = GetPlayerPed(-1)
-      AttachEntityToEntity(myped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
-    else
-      DetachEntity(GetPlayerPed(-1), true, false)
-    end
-  end
-end
-end)
-
-
-RegisterNetEvent('popogang:putInVehicle')
-AddEventHandler('popogang:putInVehicle', function()
-
-local playerPed = GetPlayerPed(-1)
-local coords    = GetEntityCoords(playerPed)
-
-if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
-
-  local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  5.0,  0,  71)
-
-  if DoesEntityExist(vehicle) then
-
-    local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
-    local freeSeat = nil
-
-    for i=maxSeats - 1, 0, -1 do
-      if IsVehicleSeatFree(vehicle,  i) then
-        freeSeat = i
-        break
-      end
-    end
-
-    if freeSeat ~= nil then
-      TaskWarpPedIntoVehicle(playerPed,  vehicle,  freeSeat)
-    end
-
-  end
-
-end
-
-end)
-
-RegisterNetEvent('popogang:OutVehicle')
-AddEventHandler('popogang:OutVehicle', function(t)
-local ped = GetPlayerPed(t)
-ClearPedTasksImmediately(ped)
-plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
-local xnew = plyPos.x+2
-local ynew = plyPos.y+2
-
-SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
-end)
-
-
--- Handcuff
-Citizen.CreateThread(function()
-while true do
-  Wait(0)
-  if IsHandcuffed then
-    DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-    DisableControlAction(0, 30,  true) -- MoveLeftRight
-    DisableControlAction(0, 31,  true) -- MoveUpDown
-  end
-end
-end)
-
-
--- Key Controls
-Citizen.CreateThread(function()
-  while true do
-      Citizen.Wait(1)
-
-      -- if IsControlJustReleased(0, Keys['F7']) and Config.EnablePlayerManagement and PlayerData.job2 ~= nil and PlayerData.job2.grade_name ~= 'recrue' then
-  if IsControlPressed(0,  Keys['F7']) and PlayerData.job2 ~= nil and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'bandits_actions') and (GetGameTimer() - GUI.Time) > 150 then
-     OpenBanditsMenu()
-      end 
-  end
-end)
-
-
-RegisterNetEvent('NB:openMenuBandits')
-AddEventHandler('NB:openMenuBandits', function()
-OpenBanditsMenu()
-end)
-
-RegisterNetEvent("popo_gang:nbgang", function(point)
+RegisterNetEvent("popo_job:nbgang", function(point)
   gangpoint = point
   show_marker()
 end)
 
 SetTimeout(1500, function()
   xPlayer = ESX.GetPlayerData()
-  TriggerServerEvent("popo_gang:requestgang")
+  TriggerServerEvent("popo_job:requestgang")
 end)
 
-RegisterCommand("popogang", function()
+RegisterCommand("popojob", function()
   openMenu()
 end, false)

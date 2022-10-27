@@ -28,7 +28,7 @@ Locales['fr'] = {
     ['create_point'] = "Création de point",
     ['delete_point'] = "Suppression de point",
     ['load'] = "Nous avons ",
-    ['load_bis'] = " gang(s) sur le serveur !",
+    ['load_bis'] = " job(s) sur le serveur !",
     ['no_vehicles_nearby'] = "Il n'y à ~r~pas~z~ de véhicule autour",
     ['no_players_nearby'] = "Il n'y à ~r~pas~z~ de joueurs autour",
 }
