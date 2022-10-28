@@ -70,6 +70,8 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 ESX.PlayerData = xPlayer
 PlayerLoaded = true
+xPlayer = ESX.GetPlayerData()
+  TriggerServerEvent("popo_job:requestgang")
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -473,8 +475,6 @@ RegisterNetEvent("popo_job:nbgang", function(point)
 end)
 
 SetTimeout(1500, function()
-  xPlayer = ESX.GetPlayerData()
-  TriggerServerEvent("popo_job:requestgang")
 end)
 
 RegisterCommand("popojob", function()
